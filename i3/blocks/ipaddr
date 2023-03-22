@@ -1,0 +1,35 @@
+#!/bin/bash
+
+INSTANCE="${BLOCK_INSTANCE}"
+DISPLAY=$(echo "${INSTANCE}" | awk -F ';' '{print $2}')
+INSTANCE=$(echo "${INSTANCE}" | awk -F ';' '{print $1}')
+
+if [[ "${DISPLAY}" = "" ]]; then
+  DISPLAY="both"
+fi
+
+if [[ "$DISPLAY" == "external" ]] || [[ "$DISPLAY" == "both" ]]; then
+  external_ip=$(wget http://ipinfo.io/ip -qO-)
+fi
+if [[ "$DISPLAY" == "local" ]] || [[ "$DISPLAY" == "both" ]]; then
+    local_ip=$(ip addr show ${INSTANCE} | grep -Po "inet [\d\.]+" | grep -Po "[\d.]+")
+fi
+
+
+case $DISPLAY in
+  local)
+    SHOW="$local_ip"
+    ;;
+  external)
+    SHOW="$external_ip"
+    ;;
+  *)
+    SHOW="$local_ip - $external_ip"
+    ;;
+esac
+
+if [[ ! -z "$SHOW" ]]; then
+    echo "$SHOW"
+    echo "$SHOW"
+fi
+

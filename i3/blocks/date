@@ -1,0 +1,30 @@
+#!/bin/bash
+
+FORMAT="${BLOCK_INSTANCE:-%b %-d, %Y}"
+DATETIME=$(date "+${FORMAT}")
+
+MMDD=$(date +'%m-%d')
+
+WIDTH=${WIDTH:-200}
+HEIGHT=${HEIGHT:-0}
+case "$BLOCK_BUTTON" in
+    1|2|3)
+
+    # the position of the upper left corner of the popup
+    posX=$(($BLOCK_X - $WIDTH / 2))
+
+    i3-msg -q "exec yad --calendar \
+        --width=$WIDTH --height=$HEIGHT \
+        --undecorated --fixed \
+        --close-on-unfocus --no-buttons \
+        --posx=$posX --posy=20 \
+        > /dev/null"
+esac
+if [[ $MMDD == "05-01" ]]; then
+    echo "${DATETIME} 🎂"
+else
+    echo "${DATETIME}"
+fi
+echo "${DATETIME}"
+echo ""
+

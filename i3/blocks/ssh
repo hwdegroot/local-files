@@ -1,0 +1,51 @@
+#!/bin/bash
+
+STATUS=$(systemctl status ssh &> /dev/null | grep 'Active: active (running)' || true)
+CONN_IN=$(netstat -atn |  tr -s ' ' | cut -d' ' -f4 | grep ':22$')
+INCOMING=$(netstat -atn |  tr -s ' ' | cut -d' ' -f4 | grep ':22$' | wc -l)
+CONN_OUT=$(netstat -atn |  tr -s ' ' | cut -d' ' -f5 | grep ':22$')
+OUTGOING=$(netstat -atn |  tr -s ' ' | cut -d' ' -f5 | grep ':22$' | wc -l)
+CHANGES=0
+
+if ! [[ -f /tmp/.ssh-current-connections ]]; then
+    touch /tmp/.ssh-current-connections
+fi
+
+for c in $CONN_OUT; do
+    if [[ -z "$(grep "OUT $c" /tmp/.ssh-current-connections)" ]]; then
+         notify-send --urgency=normal --app-name=ssh "OUT ${c//:22/}"
+         CHANGES=1
+    fi
+done
+for c in $CONN_IN; do
+    if [[ -z "$(grep "IN $c" /tmp/.ssh-current-connections)" ]]; then
+         notify-send --urgency=critical --app-name=ssh "IN ${c//:22/}"
+         CHANGES=1
+    fi
+done
+
+
+if [[ -z "$STATUS" ]] || [[ "$INCOMING" = "0" ]]; then
+    echo "${INCOMING}:${OUTGOING}"
+    echo "off"
+    echo "#00ff00"
+    echo ""
+else
+    echo "${INCOMING}:${OUTGOING}"
+    echo "on"
+    echo "#ff0000"
+    echo ""
+fi
+
+echo "" > /tmp/.ssh-current-connections
+for c in $CONN_OUT; do
+    echo "OUT $c" >> /tmp/.ssh-current-connections
+done
+for c in $CONN_IN; do
+    echo "IN $c" >> /tmp/.ssh-current-connections
+done
+
+if ! [[ -z "$STATUS" ]] || [[ "$INCOMING" != "0" ]]; then
+    exit 33
+fi
+

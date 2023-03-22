@@ -1,0 +1,52 @@
+#!/bin/bash
+# Based on http://openweathermap.org/current
+
+# Store secret
+source `dirname $0`/.openweather.secret
+
+# Check on http://openweathermap.org/find
+CITY="$(`dirname $0`/where-am-i.py)"
+CITY_NAME="$(echo "$CITY" | awk -F'|' '{print $1}')"
+CITY_ID="$(echo "$CITY" | awk -F'|' '{print $2}')"
+
+URGENT_LOWER=-10
+URGENT_HIGHER=40
+
+ICON_SUNNY="🌞"
+ICON_CLOUDY="⛅"
+ICON_RAINY="🌧"
+ICON_STORM="🌩"
+ICON_SNOW="🌨"
+ICON_FOG="🌫"
+
+SYMBOL_CELSIUS="℃"
+
+WEATHER_URL="http://api.openweathermap.org/data/2.5/weather?id=${CITY_ID}&appid=${API_KEY}&units=metric"
+
+WEATHER_INFO=$(curl -s  "${WEATHER_URL}")
+WEATHER_MAIN=$(echo "${WEATHER_INFO}" | jq -r '.weather[0].main')
+WEATHER_TEMP=$(echo "${WEATHER_INFO}" | jq -r '.main.temp + 0.5|floor')
+
+if [[ "${WEATHER_MAIN}" = *Snow* ]]; then
+  ICON=${ICON_SNOW}
+elif [[ "${WEATHER_MAIN}" = *Rain* ]] || [[ "${WEATHER_MAIN}" = *Drizzle* ]]; then
+  ICON=${ICON_RAINY}
+elif [[ "${WEATHER_MAIN}" = *Cloud* ]]; then
+  ICON=${ICON_CLOUDY}
+elif [[ "${WEATHER_MAIN}" = *Clear* ]]; then
+  ICON=${ICON_SUNNY}
+elif [[ "${WEATHER_MAIN}" = *Thunderstorm* ]]; then
+  ICON=${ICON_STORM}
+elif [[ "${WEATHER_MAIN}" = *Fog* ]] || [[ "${WEATHER_MAIN}" = *Mist* ]] || [[ "${WEATHER_MAIN}" = *Haze* ]]; then
+  ICON=${ICON_FOG}
+else
+  ICON=${WEATHER_MAIN}
+fi
+
+echo "${ICON} ${CITY_NAME} ${WEATHER_TEMP}${SYMBOL_CELSIUS}"
+echo "${ICON} ${CITY_NAME} ${WEATHER_TEMP}${SYMBOL_CELSIUS}"
+echo ""
+
+if [[ "${WEATHER_TEMP}" -lt "${URGENT_LOWER}" ]] || [[ "${WEATHER_TEMP}" -gt "${URGENT_HIGHER}" ]]; then
+  exit 33
+fi

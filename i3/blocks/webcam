@@ -1,0 +1,33 @@
+#!/bin/bash
+
+
+
+# Left click
+if [[ $((BLOCK_BUTTON)) -eq 1 ]] || [[ $((BLOCK_BUTTON)) -eq 4 ]]; then
+  sudo /sbin/rmmod uvcvideo
+# middle click toggle
+elif [[ $((BLOCK_BUTTON)) -eq 2 ]]; then
+    if [[ -c /dev/video0 ]]; then
+        sudo /sbin/rmmod uvcvideo
+    else
+        sudo modprobe uvcvideo
+    fi
+# Right click
+elif [[ $((BLOCK_BUTTON)) -eq 3 ]] || [[ $((BLOCK_BUTTON)) -eq 5 ]]; then
+    sudo modprobe uvcvideo
+fi
+if [[ -c /dev/video0 ]]; then
+    if [[ "$(fuser /dev/video0)" != "" ]]; then
+        echo "🎦 rec"
+        echo "cam (rec)"
+        echo "#FF0000"
+    else
+        echo "🎬 on"
+        echo "cam (on)"
+        echo "#FFFFFF"
+    fi
+else
+    echo "🎬 off"
+    echo "cam (off)"
+    echo "#FFFF00"
+fi

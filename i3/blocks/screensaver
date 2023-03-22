@@ -1,0 +1,15 @@
+#!/bin/bash
+
+PID="$(ps afx | grep xautolock | grep -v grep | awk '{print $1}' | tail -1)"
+
+# If we have a PID, the screensaver is active
+if [[ -z "$PID" ]]; then
+    echo "📷"
+    echo ""
+    echo ""
+else
+    echo "📸"
+    echo ""
+    echo ""
+fi
+
