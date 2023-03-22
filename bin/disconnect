@@ -1,0 +1,6 @@
+#!/bin/bash
+
+while read screen; do
+    xrandr --output $screen --off
+    sleep 1
+done< <(xrandr | grep " connected" | grep -v eDP-1 | awk -F' ' '{print $1}' )

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+WIDTH=${WIDTH:-200}
+HEIGHT=${HEIGHT:-0}
+case "$BLOCK_BUTTON" in
+    1|2|3)
+
+    # the position of the upper left corner of the popup
+    posX=$(($BLOCK_X - $WIDTH / 2))
+
+    arandr
+esac
+echo 🖥️

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+WIDTH=${WIDTH:-400}
+HEIGHT=${HEIGHT:-0}
+case "$BLOCK_BUTTON" in
+    1|2|3)
+
+    # the position of the upper left corner of the popup
+    posX=$(($BLOCK_X - $WIDTH))
+
+    i3-msg -q "exec yad --color \
+        --width=$WIDTH --height=$HEIGHT \
+        --undecorated --fixed \
+        --posx=$posX --posy=20 \
+        > /dev/null"
+esac
+echo 🖌️

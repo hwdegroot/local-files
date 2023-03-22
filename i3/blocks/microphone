@@ -1,0 +1,34 @@
+#!/bin/bash
+INSTANCE="${BLOCK_INSTANCE:-sof-hda-dsp Digital Microphone}"
+STATUS_CMD="perl `dirname $0`/microphone.pl"
+SOURCE=$(exec $STATUS_CMD "$INSTANCE" | grep "SOURCE" | cut -d: -f2 | tr -d ' ')
+
+if [[ -z "$SOURCE" ]]; then
+    echo "💀 N/A"
+    echo "💀 N/A"
+    echo "${COLOR}"
+    exit 33
+fi
+# Left click
+if [[ $((BLOCK_BUTTON)) -eq 1 ]] || [[ $((BLOCK_BUTTON)) -eq 4 ]]; then
+    pactl set-source-volume ${SOURCE} '+5%'
+# Middle click
+elif [[ $((BLOCK_BUTTON)) -eq 2 ]]; then
+    pactl set-source-mute ${SOURCE} toggle
+# Right click
+elif [[ $((BLOCK_BUTTON)) -eq 3 ]] || [[ $((BLOCK_BUTTON)) -eq 5 ]]; then
+    pactl set-source-volume ${SOURCE} '-5%'
+fi
+
+MUTE=$(exec $STATUS_CMD "$INSTANCE" | grep 'MUTE' | cut -d: -f2 | tr -d ' ')
+VOLUME=$(exec $STATUS_CMD "$INSTANCE" | grep 'VOLUME' | cut -d: -f2 | tr -d ' %')
+
+COLOR="#ffffff"
+LABEL="🎤"
+if [[ "${MUTE}" == "yes" ]]; then
+  COLOR="#ffff00"
+  MUTED=" 🔇"
+fi
+echo "${LABEL} ${VOLUME}%${MUTED}"
+echo "${LABEL} ${VOLUME}%"
+echo "${COLOR}"

@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+get_pid() {
+    ps afx | grep xautolock | grep -v grep | awk '{print $1}' | tail -1
+}
+
+screensaver_status() {
+    if [[ -z "$(get_pid)" ]]; then
+        echo "Screensaver not turned on"
+    else
+        echo "Screensaver running: $(get_pid)"
+    fi
+}
+
+if [[ "$1" == "off" ]]; then
+    if [[ -z "$(get_pid)" ]]; then
+        echo "screensaver is already off"
+    else
+        #autolock -disable
+        echo "Killing: $(get_pid)"
+        kill -9 "$(get_pid)"
+    fi
+    exit 0
+fi
+
+if [[ "$1" == "on" ]]; then
+    if [[ -z "$(get_pid)" ]]; then
+        xautolock \
+            -time 5 \
+            -locker /home/rik/.config/i3/lock.sh \
+            -detectsleep \
+            -notify 10 \
+            -notifier "notiify-send  -u critical -t 10000 -- 'LOCK in 10 seconds'" &
+    fi
+    screensaver_status
+    exit 0
+fi
+
+screensaver_status
+

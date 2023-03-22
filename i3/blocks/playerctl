@@ -1,0 +1,74 @@
+#!/bin/bash
+# Based on https://aur.archlinux.org/packages/playerctl/
+
+INSTANCE="${BLOCK_INSTANCE}"
+
+if [[ -z "$INSTANCE" ]]; then
+    INSTANCE=$(playerctl --list-all | grep spotify)
+    if [[ -z "$INSTANCE" ]]; then
+        INSTANCE=$(playerctl --list-all | head -1)
+    fi
+fi
+
+if [[ "${INSTANCE}" != "" ]]; then
+  ARGUMENTS="--player ${INSTANCE}"
+fi
+
+#             
+
+ICON_PLAY="🦄"
+ICON_PAUSE="⏸"
+ICON_STOP="⏹"
+CUR_ICON=""
+MAX_LENGTH=15
+
+if [[ "${BLOCK_BUTTON}" -eq 3 ]]; then
+    $(playerctl ${ARGUMENTS} previous)
+elif [[ "${BLOCK_BUTTON}" -eq 2 ]]; then
+    $(playerctl ${ARGUMENTS} play-pause)
+elif [[ "${BLOCK_BUTTON}" -eq 1 ]]; then
+    $(playerctl ${ARGUMENTS} next)
+elif [[ "${BLOCK_BUTTON}" -eq 4 ]]; then ## scroll up
+    playerctl ${ARGUMENTS} volume -
+elif [[ "${BLOCK_BUTTON}" -eq 5 ]]; then ## scroll down
+    playerctl ${ARGUMENTS} volume +
+fi
+
+PLAYER_STATUS=$(playerctl ${ARGUMENTS} status)
+INFO_TITLE=$(playerctl ${ARGUMENTS} metadata title)
+INFO_ALBUM=$(playerctl ${ARGUMENTS} metadata album)
+INFO_ARTIST=$(playerctl ${ARGUMENTS} metadata artist)
+
+if [[ "${PLAYER_STATUS}" = "Paused" ]]; then
+  CUR_ICON="${ICON_PAUSE}"
+elif [[ "${PLAYER_STATUS}" = "Playing" ]]; then
+  CUR_ICON="${ICON_PLAY}"
+else
+  CUR_ICON="${ICON_STOP}"
+fi
+
+
+CURR_TEXT="${INFO_ARTIST} - ${INFO_TITLE}"
+if [[ ${#CURR_TEXT} -gt $((MAX_LENGTH)) ]]; then
+    # Calculate start value
+    START=$((`date +'%s'` % ${#CURR_TEXT}))
+    # Concat two strings, so it also works for the last few chars
+    T="$CURR_TEXT - $CURR_TEXT"
+    CURR_TEXT="${T:$START:$MAX_LENGTH}"
+    if [[ $((START - MAX_LENGTH)) -lt ${#CURR_TEXT} ]]; then
+        CURR_TEXT="${CURR_TEXT}.."
+    else
+        CURR_TEXT="${CURR_TEXT}  "
+    fi
+
+    if [[ $((START)) -gt 1 ]]; then
+        CURR_TEXT="..${CURR_TEXT}"
+    else
+        CURR_TEXT="  ${CURR_TEXT}"
+    fi
+fi
+
+if [[ "${CURR_TEXT}" != " - " ]]; then
+  echo "${CURR_TEXT} ${CUR_ICON}"
+  echo "${CURR_TEXT} ${CUR_ICON}"
+fi

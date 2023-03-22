@@ -1,0 +1,6 @@
+#!/bin/bash
+
+~/.local/bin/disconnect
+
+xrandr --output HDMI-1 --same-as eDP-1 --mode 1920x1080i
+
