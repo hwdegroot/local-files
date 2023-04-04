@@ -1,0 +1,54 @@
+#!/bin/bash
+
+BATTERY=${BLOCK_INSTANCE}
+
+BATTERY_DEVICE=$(upower -e | grep ${BATTERY})
+BAT_CMD="/usr/bin/upower -i $BATTERY_DEVICE"
+BATTERY_STATE=`exec $BAT_CMD | grep -Po "(?<=state:).*" | tr -d ' '`
+BATTERY_POWER=`exec $BAT_CMD | grep -Po "(?<=percentage:).*" | tr -d '% '`
+TIME=`exec $BAT_CMD | grep -Po "time to .*" | awk -F':' '{print $2}' | grep -Po '[0-9,.]+ [hms]' | tr ',' '.' | tr -d ' '`
+
+URGENT_VALUE=10
+ON_AC="$(cat /sys/class/power_supply/AC/online)"
+
+LABEL="🔋"
+if [[ $((BATTERY_POWER)) -gt 80 ]]; then
+    COLOR="#52BE80"
+elif [[ $((BATTERY_POWER)) -gt 60 ]]; then
+    COLOR="#F1C40F"
+elif [[ $((BATTERY_POWER)) -gt 40 ]]; then
+    COLOR="#F39C12"
+elif [[ $((BATTERY_POWER)) -gt 20 ]]; then
+    COLOR="#E67E22"
+elif [[ $((BATTERY_POWER)) -gt 10 ]]; then
+    COLOR="#E74C3C"
+else
+    LABEL="🪫"
+    COLOR="#FF0000"
+fi
+
+if [[ ! -z "$TIME" ]]; then
+    TIME_REMAINING=" ($TIME)"
+else
+    TIME_REMAINING=""
+fi
+
+if [[ "$BATTERY_STATE" == "charging" ]]; then
+    DIRECTION="🔌"
+elif [[ "$BATTERY_STATE" == "discharging" ]]; then
+    DIRECTION="⚡"
+elif [[ "${BATTERY_STATE}" = "fully-charged" ]]; then
+    DIRECTION="🤖"
+elif [[ "$BATTERY_STATE" == "Not charging" ]] && [[ "$ON_AC" != "1" ]]; then
+    DIRECTION="👾"
+else
+    DIRECTION="💩"
+fi
+
+echo "${LABEL}${BATTERY_POWER}% ${DIRECTION}${TIME_REMAINING}"
+echo "$LABEL${BATTERY_POWER}% "
+echo "$COLOR"
+
+if [[ "${BATTERY_POWER}" -le "${URGENT_VALUE}" ]] && [[ "$BATTERY_STATE" == "Discharging"  ]]; then
+    exit 33
+fi

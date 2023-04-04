@@ -1,0 +1,39 @@
+#!/bin/bash
+
+INSTANCE=${BLOCK_INSTANCE:-38:18:4C:16:9C:51}
+CONNECTED=`bluetoothctl info $INSTANCE | grep Connected | grep yes`
+
+
+
+if [[ $((BLOCK_BUTTON)) -eq 1 ]] || [[ $((BLOCK_BUTTON)) -eq 4 ]]; then
+    bluetoothctl connect "$INSTANCE"
+elif [[ $((BLOCK_BUTTON)) -eq 2 ]]; then
+    COL1=( `bluetoothctl devices | awk '{split($1,a,/ /); $1=""; print $2; $2=""; print}' | sed 's/ //g' | awk 'NR % 2 == 0'` )
+    COL2=( `bluetoothctl devices | awk '{split($1,a,/ /); $1=""; print $2; $2=""; print}' | sed 's/ //g' | awk 'NR % 2 == 1'` )
+
+    DEVICES=()
+    for (( i=0; i<${#COL1[@]}; i++ )); do
+        DEVICES+=( "${COL2[$i]}" "${COL1[$i]}" )
+    done
+    HEIGHT=$((${#COL1[@]} * 28))
+    WIDTH=${WIDTH:-400}
+    POS_X=$(($BLOCK_X - $WIDTH / 2))
+
+    i3-msg "exec yad --list --column=Mac --column=Name --separator=  \
+        --width=$WIDTH --height=$HEIGHT \
+        --undecorated --fixed \
+        --close-on-unfocus --no-buttons \
+        --posx=$POS_X --posy=20 '${DEVICES[@]}' > /dev/null"
+elif [[ $((BLOCK_BUTTON)) -eq 3 ]] || [[ $((BLOCK_BUTTON)) -eq 5 ]]; then
+    bluetoothctl disconnect "$INSTANCE"
+fi
+
+if [[ -z "$CONNECTED" ]]; then
+    echo "🎧 off"
+    echo "🎧 off"
+    echo "#ff0000"
+else
+    echo "🎧 on"
+    echo "🎧 on"
+    echo "#00ff00"
+fi

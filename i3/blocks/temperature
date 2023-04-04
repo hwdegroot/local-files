@@ -1,0 +1,36 @@
+#!/bin/bash
+
+TEMP_DEVICE="${BLOCK_INSTANCE:-Core 0}"
+TEMP_OUTPUT=$(sensors | grep "${TEMP_DEVICE}")
+
+IS_URGENT=0
+CRIT_TEMP="${CRIT:-60}"
+WARN_TEMP="${WARN:-40}"
+
+CURRENT_TEMP=$(echo "${TEMP_OUTPUT}" | grep -o -E "[\+\-]?[0-9]*.[0-9]*°C" | sed -n '1p' | tr -d '+°C')
+URGENT_VALUE=$(echo "${TEMP_OUTPUT}" | grep -o -E "[\+\-]?[0-9]*.[0-9]*°C" | sed -n '2p' | tr -d '+°C')
+
+IS_CRITICAL=$(echo "scale=0;${CURRENT_TEMP}-${URGENT_VALUE} >= 0" | bc -l)
+
+if [[ "${IS_CRITICAL}" -eq 1 ]]; then
+  IS_URGENT=1
+fi
+
+
+echo "${CURRENT_TEMP}°C"
+echo "${CURRENT_TEMP}°C"
+if [[ $((`echo $CURRENT_TEMP | awk '{print int($1)}'`)) -gt $((CRIT_TEMP)) ]]; then
+    echo "#FF0000"
+elif [[ $((`echo $CURRENT_TEMP | awk '{print int($1)}'`)) -gt $((WARN_TEMP)) ]]; then
+    echo "#FFFF00"
+else
+    echo ""
+fi
+
+
+#if [[ ! -z "$TEMP_DEVICE" ]] && [[ -f /var/log/i3/stats.log ]]; then
+#    printf "%s\t%s\t%s\n" `date +'%s'` "$TEMP_DEVICE" "$CURRENT_TEMP" >> /var/log/i3/stats.log
+#fi
+if [[ "${IS_URGENT}" -eq 1 ]]; then
+  exit 33
+fi
