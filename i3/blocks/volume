@@ -23,6 +23,12 @@ fi
 STATUS_CMD="`dirname $0`/volume.pl"
 MUTE=$(exec $STATUS_CMD "$INSTANCE" | grep 'MUTE' | cut -d: -f2 | tr -d ' ')
 VOLUME=$(exec $STATUS_CMD "$INSTANCE" | grep 'VOLUME' | cut -d: -f2 | tr -d ' %')
+HEADPHONES=$(exec $STATUS_CMD "$INSTANCE" | grep 'HEADPHONES' | cut -d: -f2 | tr -d ' %')
+HEADPHONES_CONNECTED=""
+
+if [[ "${HEADPHONES}" == "yes" ]]; then
+    HEADPHONES_CONNECTED="🎧"
+fi
 
 COLOR="#ffffff"
 if [[ "${MUTE}" == "yes" ]]; then
@@ -43,8 +49,8 @@ else
 fi
 
 
-echo "${LABEL} ${VOLUME}%"
-echo "${LABEL} ${VOLUME}%"
+echo "${LABEL} ${VOLUME}% ${HEADPHONES_CONNECTED}"
+echo "${LABEL} ${VOLUME}% ${HEADPHONES_CONNECTED}"
 echo "${COLOR}"
 if [[ $((VOLUME)) -gt 100 ]]; then
     exit 33
