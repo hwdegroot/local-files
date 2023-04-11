@@ -1,23 +1,24 @@
 #!/bin/bash
 INSTANCE=`pactl list short | grep RUNNING | head -1 | cut -f1`
+SUSPENDED=""
 
-# Left click
-# Left click
-if [[ $((BLOCK_BUTTON)) -eq 1 ]] || [[ $((BLOCK_BUTTON)) -eq 4 ]]; then
-    pactl set-sink-volume ${INSTANCE} '+5%'
-# Middle click
-elif [[ $((BLOCK_BUTTON)) -eq 2 ]]; then
-    pactl set-sink-mute ${INSTANCE} toggle
-# Right click
-elif [[ $((BLOCK_BUTTON)) -eq 3 ]] || [[ $((BLOCK_BUTTON)) -eq 5 ]]; then
-    pactl set-sink-volume ${INSTANCE} '-5%'
-fi
-
-if [[ -z " $INSTANCE" ]]; then
-    echo "💀 N/A"
-    echo "💀 N/A"
-    echo "${COLOR}"
-    exit 33
+if ! [[ -z "$INSTANCE" ]]; then
+    if [[ $((BLOCK_BUTTON)) -eq 1 ]] || [[ $((BLOCK_BUTTON)) -eq 4 ]]; then
+        pactl set-sink-volume ${INSTANCE} '+5%'
+    elif [[ $((BLOCK_BUTTON)) -eq 2 ]]; then
+        pactl set-sink-mute ${INSTANCE} toggle
+    elif [[ $((BLOCK_BUTTON)) -eq 3 ]] || [[ $((BLOCK_BUTTON)) -eq 5 ]]; then
+        pactl set-sink-volume ${INSTANCE} '-5%'
+    fi
+else
+    INSTANCE=`pactl list short | grep SUSPENDED | head -1 | cut -f1`
+    SUSPENDED="💀"
+    if [[ -z "$INSTANCE" ]]; then
+        echo "💀 N/A"
+        echo "💀 N/A"
+        echo "${COLOR}"
+        exit 33
+    fi
 fi
 
 STATUS_CMD="`dirname $0`/volume.pl"
@@ -49,7 +50,7 @@ else
 fi
 
 
-echo "${LABEL} ${VOLUME}% ${HEADPHONES_CONNECTED}"
+echo "${LABEL} ${VOLUME}% ${HEADPHONES_CONNECTED} ${SUSPENDED}"
 echo "${LABEL} ${VOLUME}% ${HEADPHONES_CONNECTED}"
 echo "${COLOR}"
 if [[ $((VOLUME)) -gt 100 ]]; then
