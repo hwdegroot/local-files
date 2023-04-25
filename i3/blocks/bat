@@ -45,9 +45,13 @@ else
     DIRECTION="💩"
 fi
 
-echo "${LABEL}${BATTERY_POWER}% ${DIRECTION}${TIME_REMAINING}"
+if [[ "$BATTERY_STATE" == "discharging" ]] || [[ "$BATTERY_STATE" == "Not charging" ]]; then
+    echo -e "<span bgcolor='$COLOR'>${LABEL}${BATTERY_POWER}% ${DIRECTION}${TIME_REMAINING}</span>"
+else
+   echo "${LABEL}${BATTERY_POWER}% ${DIRECTION}${TIME_REMAINING}"
+fi
+
 echo "$LABEL${BATTERY_POWER}% "
-echo "$COLOR"
 
 if [[ "${BATTERY_POWER}" -le "${URGENT_VALUE}" ]] && [[ "$BATTERY_STATE" == "Discharging"  ]]; then
     exit 33

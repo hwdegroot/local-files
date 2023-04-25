@@ -1,0 +1,3 @@
+#!/bin/bash
+
+/opt/brave.com/brave/brave-browser --profile-directory=Default --app-id=ajamoobebmdhjjmdelngengkpklcimmg
