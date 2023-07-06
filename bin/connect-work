@@ -2,6 +2,6 @@
 
 ~/.local/bin/disconnect
 
-xrandr --output HDMI-1 --right-of eDP-1 --auto
+xrandr --output DVI-I-1-1 --right-of eDP-1 --auto
 sleep 1
-xrandr --output DP-1 --right-of HDMI-1 --auto
+xrandr --output DVI-I-2-2 --right-of DVI-I-1-1 --auto

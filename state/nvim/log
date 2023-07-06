@@ -1,0 +1,43 @@
+ERR 2023-06-23T13:42:45.864 nvim.1033516.0 decor_provider_invoke:47: error in provider (UNKNOWN PLUGIN):buf: Error executing lua: Wrong number of arguments
+stack traceback:
+	[C]: at 0x55d904c97f70
+ERR 2023-06-23T13:42:45.864 nvim.1033516.0 decor_provider_invoke:47: error in provider (UNKNOWN PLUGIN):buf: Error executing lua: ...cker/start/telescope.nvim/lua/telescope/builtin/init.lua:482: attempt to index local 'opts' (a string value)
+stack traceback:
+	...cker/start/telescope.nvim/lua/telescope/builtin/init.lua:482: in function <...cker/start/telescope.nvim/lua/telescope/builtin/init.lua:478>
+ERR 2023-06-23T13:42:45.864 nvim.1033516.0 decor_provider_invoke:47: error in provider (UNKNOWN PLUGIN):buf: Error executing lua: attempt to call a userdata value
+stack traceback:
+ERR 2023-06-23T13:42:45.864 nvim.1033516.0 decor_provider_invoke:47: error in provider (UNKNOWN PLUGIN):buf: Error executing lua: Wrong number of arguments
+stack traceback:
+	[C]: at 0x55d904c97f70
+ERR 2023-06-23T13:42:45.864 nvim.1033516.0 decor_provider_invoke:47: error in provider NvimTreeHighlights:buf: Error executing lua: attempt to call a userdata value
+stack traceback:
+ERR 2023-06-23T13:42:45.864 nvim.1033516.0 decor_provider_invoke:47: error in provider (UNKNOWN PLUGIN):buf: Error executing lua: attempt to call a nil value
+stack traceback:
+ERR 2023-06-23T13:42:45.864 nvim.1033516.0 decor_provider_invoke:47: error in provider (UNKNOWN PLUGIN):win: Error executing lua: attempt to call a nil value
+stack traceback:
+ERR 2023-06-23T13:42:45.864 nvim.1033516.0 decor_provider_invoke:47: error in provider (UNKNOWN PLUGIN):win: Error executing lua: attempt to call a userdata value
+stack traceback:
+ERR 2023-06-23T13:42:45.864 nvim.1033516.0 decor_provider_invoke:47: error in provider (UNKNOWN PLUGIN):win: Error executing lua: Wrong number of arguments
+stack traceback:
+	[C]: at 0x55d904c97f70
+ERR 2023-06-23T13:42:45.864 nvim.1033516.0 decor_provider_invoke:47: error in provider (UNKNOWN PLUGIN):win: Error executing lua: attempt to call a userdata value
+stack traceback:
+ERR 2023-06-23T13:42:45.864 nvim.1033516.0 decor_provider_invoke:47: error in provider NvimTreeHighlights:win: Error executing lua: Wrong number of arguments
+stack traceback:
+	[C]: at 0x55d904c97f70
+ERR 2023-06-23T13:42:45.864 nvim.1033516.0 decor_provider_invoke:47: error in provider (UNKNOWN PLUGIN):win: Error executing lua: attempt to call a nil value
+stack traceback:
+ERR 2023-06-23T13:42:45.864 nvim.1033516.0 decor_provider_invoke:47: error in provider (UNKNOWN PLUGIN):end: Error executing lua: Wrong number of arguments
+stack traceback:
+	[C]: at 0x55d904c97f70
+ERR 2023-06-23T13:42:45.864 nvim.1033516.0 decor_provider_invoke:47: error in provider (UNKNOWN PLUGIN):end: Error executing lua: attempt to call a table value
+stack traceback:
+ERR 2023-06-23T13:42:45.864 nvim.1033516.0 decor_provider_invoke:47: error in provider (UNKNOWN PLUGIN):end: Error executing lua: Wrong number of arguments
+stack traceback:
+	[C]: at 0x55d904c97f70
+ERR 2023-06-23T13:42:45.864 nvim.1033516.0 decor_provider_invoke:47: error in provider (UNKNOWN PLUGIN):end: Error executing lua: Wrong number of arguments
+stack traceback:
+	[C]: at 0x55d904c97f70
+ERR 2023-06-23T13:42:45.864 nvim.1033516.0 decor_provider_invoke:47: error in provider (UNKNOWN PLUGIN):end: Error executing lua: Wrong number of arguments
+stack traceback:
+	[C]: at 0x55d904c97f70
