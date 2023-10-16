@@ -8,14 +8,14 @@ SSID_NAME=$(/sbin/iwgetid -r)
 URGENT_VALUE="50"
 
 WLAN=$(/sbin/iwgetid | /usr/bin/awk -F' ' '{print $1}')
-STRENGTH=$(/sbin/iwconfig "${WLAN}" | /bin/grep -Po "(?<=Link Quality=)[0-9/]+ " | /usr/bin/xargs -i echo "100*{}" | /usr/bin/bc)
+STRENGTH=$(/sbin/iwconfig "${WLAN}" | /bin/grep -Po "(?<=Link Quality=)[0-9/]+ " | /usr/bin/xargs -I{} echo "100*{}" | /usr/bin/bc)
 
 
 if [[ "${SSID_NAME}" != "" && "${STRENGTH}" != "" ]]; then
     if [[ ${#SSID_NAME} -gt 10 ]]; then
-        SSID_NAME=WiFi
+        SSID_NAME=""
     fi
-    echo "${SSID_NAME} 📶 ${STRENGTH}%"
+    echo "${SSID_NAME}📶 ${STRENGTH}%"
     echo "WiFi ${STRENGTH}%"
 
     if [[ $((STRENGTH)) -lt $((URGENT_VALUE)) ]]; then

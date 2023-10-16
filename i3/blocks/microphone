@@ -10,13 +10,19 @@ if [[ -z "$SOURCE" ]]; then
     exit 33
 fi
 # Left click
-if [[ $((BLOCK_BUTTON)) -eq 1 ]] || [[ $((BLOCK_BUTTON)) -eq 4 ]]; then
-    pactl set-source-volume ${SOURCE} '+5%'
+if [[ $((BLOCK_BUTTON)) -eq 1 ]]; then
+    pavucontrol --tab=1
 # Middle click
 elif [[ $((BLOCK_BUTTON)) -eq 2 ]]; then
     pactl set-source-mute ${SOURCE} toggle
 # Right click
-elif [[ $((BLOCK_BUTTON)) -eq 3 ]] || [[ $((BLOCK_BUTTON)) -eq 5 ]]; then
+elif [[ $((BLOCK_BUTTON)) -eq 3 ]]; then
+    pavucontrol --tab=2
+# mouse scroll up
+elif [[ $((BLOCK_BUTTON)) -eq 4 ]]; then
+    pactl set-source-volume ${SOURCE} '+5%'
+# mouse scroll down
+elif [[ $((BLOCK_BUTTON)) -eq 5 ]]; then
     pactl set-source-volume ${SOURCE} '-5%'
 fi
 
