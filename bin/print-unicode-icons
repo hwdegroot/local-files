@@ -1,0 +1,13 @@
+#!/bin/sh
+
+export BASHOPTS=xpg_echo
+
+#from=0000 to=ffff
+from=f000 to=ffff
+from=$(printf '%d' "0x$from") to=$(printf '%d' "0x$to")
+while test "$from" -le "$to"; do
+    num=$(printf '%04x' "$from")
+    bash -c "echo -n \"$num:  \u$num\""
+    echo ""
+    from=$((from+1))
+done

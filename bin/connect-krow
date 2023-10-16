@@ -1,0 +1,7 @@
+#!/bin/bash
+
+~/.local/bin/disconnect
+
+xrandr --output DVI-I-2-2 --right-of eDP-1 --auto
+sleep 1
+xrandr --output DVI-I-1-1 --right-of DVI-I-2-2 --auto
